@@ -1,3 +1,11 @@
+//
+x = 1
+     function myMainLoop () {
+        
+    	 console.log(x);
+    	 x += 1
+    }
+setInterval(myMainLoop, 1000);
 
 
     function draw() {
