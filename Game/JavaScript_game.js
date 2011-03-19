@@ -1,11 +1,52 @@
+// This game loops through the following functions, depending on
+// logical statements to tell it when to do something elce
+
+// These variables are in assignment format. This is nothing new
+// to me; those who are reading this however, may enjoy knowing
+// that "wordcount = 0" means that, as of this point in the script,
+// the variable "wordcount" is being made to equal zero.
+wordcount = 0
+words = "---"
 yourlife_percent=100
 e1life_percent=100
 turn = "yours"
 fight_block_height = 150;
 reset();
 
+// "reset();" calls the function named "reset." This function can be
+// seen further down the page. Calling functions like this was only
+// recently learned by me over the corse of this sabbatical. Previously,
+// I might have used an odd series of goto loops and logic functions
+// Enter and exit the function. 
+// Although I was on the verge of teaching myself when I was learning
+// functions, I did in fact ask for help from Joe on this account.
+
+function myMainLoop () {
+    var canvas = document.getElementById("canvas");
+    if (canvas.getContext) {
+        var ctx = canvas.getContext("2d"); 
+    drawto(ctx);
+    if (turn == "yours" && wordcount <= 0) {
+    	your_turn(ctx);
+    };
+    if (turn == "enemies" && wordcount <= 0){
+        drawto(ctx);
+        enemy1_turn(ctx);
+    }
+    if (wordcount > 0){
+        wordcount -= 1
+        writetoscreen(ctx);
+    }
+    
+    };
+}; 
+setInterval(myMainLoop, 500);
+
+// The following script is the result of
+
 function drawto (ctx) {
-    ctx.clearRect(0,0,450,300);
+    
+	ctx.clearRect(0,0,450,300);
     
     var background1 = new Image();
     background1.onload = function() {
@@ -83,8 +124,9 @@ function your_turn (ctx) {
         if ((pos_x >= 132 && pos_x <= 318)) {
             console.log("fought!");
             reset ();
-            fight ();
+            fight(ctx);
             turn = "enemies"
+            console.log("enemies turn");
         };
         
         if ((pos_x >= 326 && pos_x <= 436)) {
@@ -94,17 +136,17 @@ function your_turn (ctx) {
             e1life_percent -= 10
             turn = "enemies"
         };
-          	reset (canvas);
+          	reset();
        	};
     };
 
-function fight (ctx) {
+function fight(ctx) {
 
     e1life_percent -= 1
-    canvas.drawstring("qwertyuiop[]", 100,100);
-    canvas.paint
-}
-    
+    words = "You Punched The Monster!"
+    writetoscreen(ctx);
+    wordcount = 5
+};
 function reset () {
 	pos_x = -1;
 	pos_y = -1;
@@ -114,23 +156,10 @@ function reset () {
 function enemy1_turn(ctx) {
 	yourlife_percent -= 1
 	turn = "yours"
-}
-
-
-function myMainLoop () {
-    var canvas = document.getElementById("canvas");
-    if (canvas.getContext) {
-        var ctx = canvas.getContext("2d"); 
-    drawto(ctx);
-    //problem: possible fix: only run your_turn on your turn. Turn variable--fixed, after your turn is enemy turn
-    if (turn == "yours") {
-    	your_turn(ctx);
-    };
-        if (turn == "enemies"){
-        	drawto(ctx);
-        	enemy1_turn(ctx);
-        }
-    
-    };
-}; 
-setInterval(myMainLoop, 500);
+};
+function writetoscreen(ctx){
+	ctx.clearRect(170,170,180,200);
+    ctx.strokeText(words,170,170);
+    ctx.beginPath();
+    ctx.paint
+};
